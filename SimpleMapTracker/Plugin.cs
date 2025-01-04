@@ -17,39 +17,48 @@ using ImGuiNET;
 namespace SimpleMapTracker;
 
 public unsafe class Plugin : Window, IDalamudPlugin {
+    public static Config Config { get; set; } = new();
     public static IDataManager DataManager { get; private set; } = null!;
     public static GameFunction GameFunction { get; private set; } = null!;
     public static IPluginLog Log { get; private set; } = null!;
-    public static Share Share { get; private set; } = null!;
+    public static Share Share { get; set; } = new();
 
     private readonly IDalamudPluginInterface pluginInterface;
     private readonly IGameGui gameGui;
     private readonly ICommandManager commandManager;
     private readonly WindowSystem windowSystem;
+    private readonly ConfigWindow configWindow;
 
-    public Plugin(IDalamudPluginInterface pluginInterface, IFramework framework, IDataManager dataManager, IGameInteropProvider gameInteropProvider, IPluginLog pluginLog, IGameGui gameGui, ICommandManager commandManager) : base("Simple Map Helper", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize) {
+    public Plugin(IDalamudPluginInterface pluginInterface, IFramework framework, IDataManager dataManager, IGameInteropProvider gameInteropProvider, IPluginLog pluginLog, IGameGui gameGui, ICommandManager commandManager) : base("Simple Map Tracker", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoResize) {
+        Config = pluginInterface.GetPluginConfig() as Config ?? new Config();
+        configWindow = new ConfigWindow(Config, pluginInterface);
         RespectCloseHotkey = false;
         this.pluginInterface = pluginInterface;
         this.gameGui = gameGui;
         this.commandManager = commandManager;
-        Share = new Share();
         DataManager = dataManager;
 
         Log = pluginLog;
         GameFunction = new GameFunction(gameInteropProvider);
 
-        windowSystem = new WindowSystem(nameof(SimpleMapHelper));
+        windowSystem = new WindowSystem(nameof(SimpleMapTracker));
         windowSystem.AddWindow(this);
-
+        windowSystem.AddWindow(configWindow);
+        
         pluginInterface.UiBuilder.Draw += windowSystem.Draw;
         pluginInterface.UiBuilder.OpenMainUi += Toggle;
+        pluginInterface.UiBuilder.OpenConfigUi += configWindow.Toggle;
 
-        commandManager.AddHandler("/maps", new CommandInfo((_, _) => Toggle()) { ShowInHelp = true, HelpMessage = "Open the Simple Map Helper window" });
-
+        commandManager.AddHandler("/maps", new CommandInfo((_, _) => Toggle()) { ShowInHelp = true, HelpMessage = "Open the Simple Map Tracker window" });
         framework.Update += FrameworkUpdate;
-#if DEBUG
-        IsOpen = true;
-#endif
+        IsOpen = Config.WindowOpen;
+        TitleBarButtons = [ new TitleBarButton {
+            Icon = FontAwesomeIcon.Cogs,
+            Click = _ => configWindow.Toggle(),
+            ShowTooltip = () => ImGui.SetTooltip("Open Config")
+        }];
+        
+        if (Config.ConnectOnStartup) Share.Setup();
     }
 
     private readonly Stopwatch updateThrottle = Stopwatch.StartNew();
@@ -76,7 +85,7 @@ public unsafe class Plugin : Window, IDalamudPlugin {
             if (contentId == 0 || groupId == 0 || groupId2 == 0) {
                 Share.Update(string.Empty, 0, 0, []);
             } else {
-                var party = GroupManager.Instance()->MainGroup.PartyMembers.ToArray().Take(GroupManager.Instance()->MainGroup.MemberCount)
+                var party = GroupManager.Instance()->MainGroup.PartyMembers[..GroupManager.Instance()->MainGroup.MemberCount].ToArray()
                     .Where(p => p.ContentId != 0 && p.ContentId != contentId)
                     .Select(p => {
                         var id = MakeId(p.ContentId, groupId, groupId2);
@@ -105,7 +114,7 @@ public unsafe class Plugin : Window, IDalamudPlugin {
 
     public List<PlayerMapState> GetPlayers() {
         var playerList = new List<PlayerMapState> { LocalPlayerMapState.Instance };
-        foreach (var pm in GroupManager.Instance()->MainGroup.PartyMembers.ToArray().Take(GroupManager.Instance()->MainGroup.MemberCount)) {
+        foreach (var pm in GroupManager.Instance()->MainGroup.PartyMembers[..GroupManager.Instance()->MainGroup.MemberCount]) {
             if (pm.EntityId == 0xE0000000) continue;
             if (playerList.Any(p => p.ContentId == pm.ContentId)) continue;
             var partyMemberState = GetMapState(pm.ContentId, pm.NameString);
@@ -148,10 +157,11 @@ public unsafe class Plugin : Window, IDalamudPlugin {
 
                         if (ImGui.IsItemClicked() && p.TreasureSpot != null) {
                             var link = p.CreateMapLink();
-                            if (link == null)
+                            if (link == null) {
                                 Log.Warning("Failed to open map.");
-                            else
+                            } else {
                                 gameGui.OpenMapWithMapLink(link);
+                            }
                         }
                     }
 
@@ -162,6 +172,29 @@ public unsafe class Plugin : Window, IDalamudPlugin {
                 ImGui.EndTable();
             }
         }
+
+        using (ImRaii.PushColor(ImGuiCol.Button, 0, Share.IsSetup))
+        using (ImRaii.PushColor(ImGuiCol.ButtonActive, 0, Share.IsSetup))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, 0, Share.IsSetup)) {
+            var buttonSize = new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetTextLineHeightWithSpacing());
+            if (!Share.IsSetup) {
+                if (ImGui.Button("Connect", buttonSize)) {
+                    Share.Setup();
+                }
+            } else if (!Share.IsConnected) {
+                ImGui.Button("Disconnected", buttonSize);
+            }
+        }
+    }
+
+    public override void OnClose() {
+        Config.WindowOpen = false;
+        base.OnClose();
+    }
+
+    public override void OnOpen() {
+        Config.WindowOpen = true;
+        base.OnOpen();
     }
 
     public void Dispose() {
@@ -169,5 +202,6 @@ public unsafe class Plugin : Window, IDalamudPlugin {
         pluginInterface.UiBuilder.Draw -= windowSystem.Draw;
         windowSystem.RemoveAllWindows();
         commandManager.RemoveHandler("/maps");
+        pluginInterface.SavePluginConfig(Config);
     }
 }

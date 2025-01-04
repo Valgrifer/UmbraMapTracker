@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Websocket.Client;
 
@@ -26,26 +27,24 @@ public class ShareData : MapIdentifier {
     }
 }
 
-public class Share : IDisposable {
-    private readonly Uri serverUri = new("wss://maps.caraxi.dev");
-
-    private readonly WebsocketClient? client;
+public class Share : IDisposable, IAsyncDisposable {
+    public bool IsSetup => client?.IsStarted ?? false;
+    public bool IsConnected => client?.IsRunning ?? false;
+    
+    private WebsocketClient? client;
 
     public ShareData Data { get; } = new();
     private string sharedData = string.Empty;
     private readonly Stopwatch updated = Stopwatch.StartNew();
 
-    public Share() {
-        client = new WebsocketClient(serverUri);
-
+    public void Setup() {
+        client = new WebsocketClient(new Uri($"{(Plugin.Config.UseSsl ? "wss://" : "ws://")}{Plugin.Config.Server}"));
         client.ReconnectionHappened.Subscribe(OnConnected);
         client.MessageReceived.Subscribe(OnMessage, OnError);
         client.DisconnectionHappened.Subscribe(OnDisconnect);
-
         client.ReconnectTimeout = TimeSpan.FromSeconds(10);
         client.ErrorReconnectTimeout = TimeSpan.FromSeconds(10);
         client.LostReconnectTimeout = TimeSpan.FromSeconds(10);
-
         client.Start();
     }
 
@@ -58,18 +57,13 @@ public class Share : IDisposable {
         Data.User = user;
         Data.TreasureHuntRankId = rank;
         Data.TreasureSpot = spot;
-
         foreach (var member in Data.Party.Keys.Where(p => !party.Contains(p))) Data.Party.Remove(member);
-
         foreach (var member in party) Data.Party.TryAdd(member, null);
-
         var dataJson = JsonConvert.SerializeObject(Data);
-        if (updated.ElapsedMilliseconds > 30000 || sharedData != dataJson) {
-            sharedData = dataJson;
-            Plugin.Log.Verbose($"Share Data - {user} : {rank}.{spot} - {Data.Party.Count}");
-            updated.Restart();
-            client?.Send(dataJson);
-        }
+        if (updated.ElapsedMilliseconds <= 30000 && sharedData == dataJson) return; 
+        sharedData = dataJson;
+        updated.Restart();
+        client?.Send(dataJson);
     }
 
     private void OnMessage(ResponseMessage msg) {
@@ -77,9 +71,7 @@ public class Share : IDisposable {
         try {
             var updateData = JsonConvert.DeserializeObject<ShareData>(msg.Text);
             if (updateData == null) return;
-            Plugin.Log.Verbose($"Update: {updateData.User} / {updateData.TreasureHuntRankId}.{updateData.TreasureSpot} - {updateData.Party.Count}");
             foreach (var p in updateData.Party) {
-                Plugin.Log.Verbose($"- {p.Key}: {p.Value}");
                 if (Data.Party.ContainsKey(p.Key)) Data.Party[p.Key] = p.Value;
             }
         } catch (Exception ex) {
@@ -99,8 +91,14 @@ public class Share : IDisposable {
 
     public void Dispose() {
         sharedData = string.Empty;
-        client?.Stop(WebSocketCloseStatus.NormalClosure, "Closing")
-            .Wait();
+        client?.Stop(WebSocketCloseStatus.NormalClosure, "Closing").Wait();
         client?.Dispose();
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (client != null) {
+            await client.Stop(WebSocketCloseStatus.NormalClosure, "Closing");
+            client.Dispose();
+        }
     }
 }

@@ -13,7 +13,7 @@
         <OutputPath>$(SolutionDir)/bin/$(Configuration)</OutputPath>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <!-- GitInfo generator -->
-        <ThisAssemblyNamespace>SimpleMapHelper</ThisAssemblyNamespace>
+        <ThisAssemblyNamespace>SimpleMapTracker</ThisAssemblyNamespace>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <GitVersion>false</GitVersion>
         <PluginVersion>0.0.1</PluginVersion>

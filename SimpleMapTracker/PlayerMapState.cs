@@ -1,6 +1,5 @@
 ﻿using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.Sheets;
-using SimpleMapHelper;
 
 namespace SimpleMapTracker;
 
