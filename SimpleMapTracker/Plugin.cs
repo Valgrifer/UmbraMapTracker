@@ -76,7 +76,7 @@ public unsafe class Plugin : Window, IDalamudPlugin {
             if (contentId == 0 || groupId == 0 || groupId2 == 0) {
                 Share.Update(string.Empty, 0, 0, []);
             } else {
-                var party = GroupManager.Instance()->MainGroup.PartyMembers.ToArray()
+                var party = GroupManager.Instance()->MainGroup.PartyMembers.ToArray().Take(GroupManager.Instance()->MainGroup.MemberCount)
                     .Where(p => p.ContentId != 0 && p.ContentId != contentId)
                     .Select(p => {
                         var id = MakeId(p.ContentId, groupId, groupId2);
@@ -105,7 +105,7 @@ public unsafe class Plugin : Window, IDalamudPlugin {
 
     public List<PlayerMapState> GetPlayers() {
         var playerList = new List<PlayerMapState> { LocalPlayerMapState.Instance };
-        foreach (var pm in GroupManager.Instance()->MainGroup.PartyMembers) {
+        foreach (var pm in GroupManager.Instance()->MainGroup.PartyMembers.ToArray().Take(GroupManager.Instance()->MainGroup.MemberCount)) {
             if (pm.EntityId == 0xE0000000) continue;
             if (playerList.Any(p => p.ContentId == pm.ContentId)) continue;
             var partyMemberState = GetMapState(pm.ContentId, pm.NameString);
