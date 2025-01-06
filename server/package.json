@@ -1,0 +1,17 @@
+{
+  "name": "simplemaptrackerserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon --ignore ./history/ -x \"node server.js || touch server.js\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
