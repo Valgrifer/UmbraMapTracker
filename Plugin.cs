@@ -124,6 +124,10 @@ public unsafe class Plugin : Window, IDalamudPlugin {
         return playerList;
     }
 
+    public override bool DrawConditions() {
+        return base.DrawConditions() && PlayerState.Instance()->ContentId != 0;
+    }
+
     public override void Draw() {
         using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, new Vector2(4))) {
             if (ImGui.BeginTable("partyMembers", 3, ImGuiTableFlags.NoClip | ImGuiTableFlags.Sortable | ImGuiTableFlags.Borders | ImGuiTableFlags.SizingFixedFit)) {
