@@ -16,7 +16,7 @@
         <ThisAssemblyNamespace>SimpleMapTracker</ThisAssemblyNamespace>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <GitVersion>false</GitVersion>
-        <PluginVersion>0.0.1</PluginVersion>
+        <PluginVersion>1.0.1</PluginVersion>
         <NoWarn>TA100</NoWarn> <!-- Fuck your SponsorLink. Don't shove warnings into my output. -->
     </PropertyGroup>
 

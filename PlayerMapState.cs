@@ -16,7 +16,7 @@ public class PlayerMapState {
                 .GetRowOrDefault(TreasureHuntRankId);
 
     public TreasureSpot? TreasureSpot =>
-        TreasureSpotId == 0 || TreasureHuntRankId == 0
+        TreasureHuntRankId == 0
             ? null
             : Plugin.DataManager.GetSubrowExcelSheet<TreasureSpot>()
                 .GetSubrowOrDefault(TreasureHuntRankId, TreasureSpotId);
