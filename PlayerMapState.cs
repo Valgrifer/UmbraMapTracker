@@ -1,4 +1,6 @@
-﻿using Dalamud.Game.Text.SeStringHandling.Payloads;
+﻿using System.IO;
+using System.Numerics;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.Sheets;
 
 namespace SimpleMapTracker;
@@ -23,6 +25,16 @@ public class PlayerMapState {
 
     public string ZoneName => TreasureSpot?.Location.ValueNullable?.Territory.ValueNullable?.PlaceName.ValueNullable?.Name.ExtractText() ?? "No Open Map";
 
+    public uint? TerritoryId => TreasureSpot?.Location.ValueNullable?.Territory.RowId;
+    
+    public Vector3? ActualPosition {
+        get {
+            var location = TreasureSpot?.Location.ValueNullable;
+            if (location == null) return null;
+            return new Vector3(location.Value.X, location.Value.Y, location.Value.Z);
+        }
+    }
+    
     public MapLinkPayload? CreateMapLink() {
         var location = TreasureSpot?.Location.ValueNullable;
         var map = location?.Map.ValueNullable;

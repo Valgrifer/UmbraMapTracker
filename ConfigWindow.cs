@@ -15,6 +15,12 @@ public class ConfigWindow(Config config, IDalamudPluginInterface pluginInterface
 
     public override void Draw() {
         var configChanged = false;
+
+        if (ImGui.CollapsingHeader("Client Config", ImGuiTreeNodeFlags.DefaultOpen)) {
+            configChanged |= ImGui.Checkbox("Show maps on map", ref config.ShowOnMap);
+            configChanged |= ImGui.Checkbox("Show maps on minimap", ref config.ShowOnMiniMap);
+        }
+        
         if (ImGui.CollapsingHeader("Server Config")) {
             var serverConfigChanged = false;
             serverConfigChanged |= ImGui.InputText("Host", ref config.Server, 512);
