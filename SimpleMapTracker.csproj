@@ -16,7 +16,7 @@
         <ThisAssemblyNamespace>SimpleMapTracker</ThisAssemblyNamespace>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <GitVersion>false</GitVersion>
-        <PluginVersion>1.0.2</PluginVersion>
+        <PluginVersion>1.0.3</PluginVersion>
         <NoWarn>TA100</NoWarn> <!-- Fuck your SponsorLink. Don't shove warnings into my output. -->
     </PropertyGroup>
 
@@ -36,7 +36,7 @@
     </Target>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="12.0.0" />
+        <PackageReference Include="DalamudPackager" Version="13.0.0" />
         <PackageReference Include="Websocket.Client" Version="5.1.2"/>
         <Reference Include="Dalamud">
             <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
@@ -62,8 +62,12 @@
             <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
             <Private>false</Private>
         </Reference>
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+        <Reference Include="Dalamud.Bindings.ImGui">
+            <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGui.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Dalamud.Bindings.ImPlot">
+            <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImPlot.dll</HintPath>
             <Private>false</Private>
         </Reference>
         <PackageReference Include="GitInfo" Version="3.5.0">
