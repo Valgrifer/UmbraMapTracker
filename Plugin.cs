@@ -142,9 +142,9 @@ public unsafe class Plugin : Window, IDalamudPlugin {
 
                 Share.Update(MakeId(contentId, groupId, groupId2), LocalPlayerMapState.Instance.TreasureHuntRankId, LocalPlayerMapState.Instance.TreasureSpotId, party);
             }
+            
+            UpdateMapIcons();
         }
-        
-        UpdateMapIcons();
     }
 
     public sealed class MultiLabelMapMarker(Vector3 position) {
@@ -206,10 +206,12 @@ public unsafe class Plugin : Window, IDalamudPlugin {
         }
         
         if (!oldMarkers.SetEquals(mapMarkers)) {
+            Log.Debug("Redrawing Map Icons");
             AgentMap.Instance()->ResetMapMarkers();
         }
 
         if (!oldMinimapMarkers.SetEquals(minimapMarkers)) {
+            Log.Debug("Redrawing Minimap Icons");
             AgentMap.Instance()->ResetMiniMapMarkers();
         }
     }
