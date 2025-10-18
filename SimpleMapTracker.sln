@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMapTracker", "SimpleMapTracker.csproj", "{FAA61A62-7A2E-4039-9AE3-D656CA8CF8E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleMapTracker", "src/SimpleMapTracker.csproj", "{FAA61A62-7A2E-4039-9AE3-D656CA8CF8E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
