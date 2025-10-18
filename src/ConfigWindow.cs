@@ -3,7 +3,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public class ConfigWindow(Config config, IDalamudPluginInterface pluginInterface) : Window("Simple Map Tracker - Config") {
     

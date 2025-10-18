@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public unsafe class LocalPlayerMapState : PlayerMapState {
     public static LocalPlayerMapState Instance { get; } = new();

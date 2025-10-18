@@ -1,6 +1,6 @@
 ﻿using Dalamud.Configuration;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public class Config : IPluginConfiguration {
     public int Version { get; set; } = 1;

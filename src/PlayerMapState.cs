@@ -3,7 +3,7 @@ using System.Numerics;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.Sheets;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public class PlayerMapState {
     public virtual ulong ContentId { get; init; }

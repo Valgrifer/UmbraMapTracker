@@ -1,7 +1,7 @@
 ﻿using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public class GameFunction {
     public GameFunction(IGameInteropProvider gameInteropProvider) {

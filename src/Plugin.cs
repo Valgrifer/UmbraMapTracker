@@ -20,7 +20,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.Interop;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public unsafe class Plugin : Window, IDalamudPlugin {
     public static Config Config { get; set; } = new();
@@ -47,7 +47,7 @@ public unsafe class Plugin : Window, IDalamudPlugin {
         Log = pluginLog;
         GameFunction = new GameFunction(gameInteropProvider);
 
-        windowSystem = new WindowSystem(nameof(SimpleMapTracker));
+        windowSystem = new WindowSystem(nameof(UmbraMapTracker));
         windowSystem.AddWindow(this);
         windowSystem.AddWindow(configWindow);
         

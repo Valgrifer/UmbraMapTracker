@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Websocket.Client;
 
-namespace SimpleMapTracker;
+namespace UmbraMapTracker;
 
 public class MapIdentifier {
     [JsonProperty("mapType")] public uint TreasureHuntRankId;
