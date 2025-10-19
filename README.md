@@ -10,3 +10,7 @@ It provides the same functionality as SimpleMapTracker while adding enhanced int
 - 🗺️ **Track map objectives easily** – identical to the original SimpleMapTracker functionality.
 - 👥 **Team Map Widget** – new UI widget that displays tracked maps for your entire party.
 - 📍 **World Marker Support** – automatically shows world markers related to tracked maps.
+
+
+
+I will try to look into the original [SimpleMapTracker](https://github.com/Caraxi/SimpleMapTracker) project to add IPC.
