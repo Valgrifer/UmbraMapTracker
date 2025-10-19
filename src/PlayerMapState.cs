@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Lumina.Excel.Sheets;
 
@@ -14,14 +13,16 @@ public class PlayerMapState {
     public TreasureHuntRank? TreasureHuntRank =>
         TreasureHuntRankId == 0
             ? null
-            : Plugin.DataManager.GetExcelSheet<TreasureHuntRank>()
+            : Utils.DataManager.GetExcelSheet<TreasureHuntRank>()
                 .GetRowOrDefault(TreasureHuntRankId);
 
     public TreasureSpot? TreasureSpot =>
         TreasureHuntRankId == 0
             ? null
-            : Plugin.DataManager.GetSubrowExcelSheet<TreasureSpot>()
+            : Utils.DataManager.GetSubrowExcelSheet<TreasureSpot>()
                 .GetSubrowOrDefault(TreasureHuntRankId, TreasureSpotId);
+
+    public bool HasMap => TreasureHuntRankId != 0;
 
     public string ZoneName => TreasureSpot?.Location.ValueNullable?.Territory.ValueNullable?.PlaceName.ValueNullable?.Name.ExtractText() ?? "No Open Map";
 

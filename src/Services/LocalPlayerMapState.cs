@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
-namespace UmbraMapTracker;
+namespace UmbraMapTracker.Services;
 
+[Service]
 public unsafe class LocalPlayerMapState : PlayerMapState {
-    public static LocalPlayerMapState Instance { get; } = new();
     public override ulong ContentId => PlayerState.Instance()->ContentId;
     public override string Name => PlayerState.Instance()->CharacterNameString;
 
@@ -16,8 +16,8 @@ public unsafe class LocalPlayerMapState : PlayerMapState {
     public override ushort TreasureSpotId {
         get {
             if (updateThrottle.ElapsedMilliseconds < 1000) return spotCache;
-            rankCache = Plugin.GameFunction.GetCurrentTreasureHuntRank();
-            spotCache = Plugin.GameFunction.GetCurrentTreasureHuntSpot();
+            rankCache = Utils.GameFunction.GetCurrentTreasureHuntRank();
+            spotCache = Utils.GameFunction.GetCurrentTreasureHuntSpot();
             return spotCache;
         }
     }
@@ -25,8 +25,8 @@ public unsafe class LocalPlayerMapState : PlayerMapState {
     public override uint TreasureHuntRankId {
         get {
             if (updateThrottle.ElapsedMilliseconds < 1000) return rankCache;
-            rankCache = Plugin.GameFunction.GetCurrentTreasureHuntRank();
-            spotCache = Plugin.GameFunction.GetCurrentTreasureHuntSpot();
+            rankCache = Utils.GameFunction.GetCurrentTreasureHuntRank();
+            spotCache = Utils.GameFunction.GetCurrentTreasureHuntSpot();
             return rankCache;
         }
     }

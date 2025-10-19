@@ -2,18 +2,6 @@
   "version": 1,
   "dependencies": {
     "net9.0-windows7.0": {
-      "DalamudPackager": {
-        "type": "Direct",
-        "requested": "[13.0.0, )",
-        "resolved": "13.0.0",
-        "contentHash": "Mb3cUDSK/vDPQ8gQIeuCw03EMYrej1B4J44a1AvIJ9C759p9XeqdU9Hg4WgOmlnlPe0G7ILTD32PKSUpkQNa8w=="
-      },
-      "DotNet.ReproducibleBuilds": {
-        "type": "Direct",
-        "requested": "[1.2.25, )",
-        "resolved": "1.2.25",
-        "contentHash": "xCXiw7BCxHJ8pF6wPepRUddlh2dlQlbr81gXA72hdk4FLHkKXas7EH/n+fk5UCA/YfMqG1Z6XaPiUjDbUNBUzg=="
-      },
       "GitInfo": {
         "type": "Direct",
         "requested": "[3.5.0, )",
@@ -22,6 +10,12 @@
         "dependencies": {
           "ThisAssembly.Constants": "2.0.6"
         }
+      },
+      "System.Reflection.MetadataLoadContext": {
+        "type": "Direct",
+        "requested": "[9.0.4, )",
+        "resolved": "9.0.4",
+        "contentHash": "ygCfi3h1L1f2NCzd8YtTbV6D/+w/pwawzFcAGaN9jevN0/0GvhH1bTAWgZ5qj2tb9hZ/pISv43w8ENe5nkiX0w=="
       },
       "Websocket.Client": {
         "type": "Direct",

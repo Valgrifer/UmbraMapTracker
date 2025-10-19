@@ -1,13 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Dalamud.NET.Sdk/13.0.0">
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+        <Configurations>Release;Debug</Configurations>
+    </PropertyGroup>
     <PropertyGroup>
         <UmbraLibPath>$([System.IO.Directory]::GetDirectories($(appdata)\XIVLauncher\installedPlugins\Umbra\)[0])\</UmbraLibPath>
-        <RootNamespace>SimpleMapTracker</RootNamespace>
+        <RootNamespace>UmbraMapTracker</RootNamespace>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <TargetFramework>net9.0-windows</TargetFramework>
-        <Platforms>x64</Platforms>
+        <Platforms>AnyCPU</Platforms>
+        <OutputPath>..\out\$(Configuration)\</OutputPath>
+        
+        <EnableDefaultNoneItems>true</EnableDefaultNoneItems>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -15,14 +22,15 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <OutputPath>..\out\$(Configuration)\</OutputPath>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <!-- GitInfo generator -->
+        <NoWarn>TA100</NoWarn> <!-- Fuck your SponsorLink. Don't shove warnings into my output. -->
+    </PropertyGroup>
+
+    <PropertyGroup>
         <ThisAssemblyNamespace>UmbraMapTracker</ThisAssemblyNamespace>
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
         <GitVersion>false</GitVersion>
-        <PluginVersion>1.0.3</PluginVersion>
-        <NoWarn>TA100</NoWarn> <!-- Fuck your SponsorLink. Don't shove warnings into my output. -->
+        <PluginVersion>1.0.0</PluginVersion>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
@@ -41,6 +49,30 @@
     </Target>
 
     <ItemGroup>
+        <Reference Include="Dalamud">
+            <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="FFXIVClientStructs">
+            <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="InteropGenerator.Runtime">
+            <HintPath>$(DalamudLibPath)\InteropGenerator.Runtime.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina">
+            <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina.Excel">
+            <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
         <PackageReference Include="Websocket.Client" Version="5.1.2"/>
         <Reference Include="Umbra">
             <HintPath>$(UmbraLibPath)Umbra.dll</HintPath>
@@ -63,11 +95,8 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <Content Include="src\packages.lock.json" />
-        <Content Include="src\UmbraMapTracker.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+        <PackageReference Include="System.Reflection.MetadataLoadContext" Version="9.0.4" />
     </ItemGroup>
 </Project>
